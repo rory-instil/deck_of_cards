@@ -1,28 +1,29 @@
-import {dealCard, shuffle} from "@/deck/deck";
-import {Card, EmptyCard, Rank, Suit} from "@/deck/card";
+import {Card, Rank, Suit} from "@/deck/card";
+import Deck from "@/deck/deck";
+
+let deck: Deck;
 
 beforeEach(() => {
-  // To ensure the tests have fresh state from the import between runs
-  vi.resetModules()
+  deck = new Deck();
 });
 
 const nonShuffledDefaultCard = {
-  suit: Suit.Clubs,
-  rank: Rank.Ace
+  suit: Suit.Diamonds,
+  rank: Rank.King
 }
 
 describe('shuffle', () => {
   test('should shuffle cards', () => {
-    shuffle();
-    expect(dealCard()).not.toStrictEqual(nonShuffledDefaultCard)
+    deck.shuffle();
+    expect(deck.dealCard()).not.toStrictEqual(nonShuffledDefaultCard)
   })
 })
 
 describe('deal_card', () => {
-  const emptyCard = (card: Card): card is EmptyCard => true;
+  const emptyCard = (card: Card) => typeof card === 'object' && Object.keys(card).length === 0;
 
   test('should get default card', () => {
-    expect(dealCard()).toStrictEqual(nonShuffledDefaultCard)
+    expect(deck.dealCard()).toStrictEqual(nonShuffledDefaultCard)
   })
 
   test('should get one of every card from a 52 deck', () => {
@@ -35,15 +36,15 @@ describe('deal_card', () => {
       })
     }))
 
-    const allCardsDealt = Array.from({ length: 52 }, () => dealCard());
+    const allCardsDealt = Array.from({ length: 52 }, () => deck.dealCard());
     const anyCardsAreEmpty = allCardsDealt.find(emptyCard);
 
-    expect(anyCardsAreEmpty).toBe(false);
+    expect(anyCardsAreEmpty).toBeUndefined();
     expect(new Set(allCardsDealt)).toStrictEqual(everyCard);
   })
 
   test('should have 8 empty cards when dealing 8 more cards than the size of the deck', () => {
-    const allCardsDealt: Array<Card> = Array.from({ length: 60 }, () => dealCard());
+    const allCardsDealt: Array<Card> = Array.from({ length: 60 }, () => deck.dealCard());
 
     expect(allCardsDealt.filter(emptyCard).length).toBe(8);
   })

@@ -1,8 +1,8 @@
 enum Suit {
   Spades = 'SPADES',
   Hearts = 'HEARTS',
-  Clubs = 'Clubs',
-  Diamonds = 'Diamonds'
+  Clubs = 'CLUBS',
+  Diamonds = 'DIAMONDS'
 }
 
 enum Rank {
